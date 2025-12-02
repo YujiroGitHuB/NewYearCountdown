@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>New Year Countdown</title>
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/128/2963/2963469.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body data-theme="blue">
+    <div id="stars"></div>
+
+    <div class="controls">
+        <button class="control-btn" id="themeToggle" title="Toggle Light/Dark">🌓</button>
+        <button class="control-btn" id="soundToggle" title="Toggle Sound">🔊</button>
+        <div class="theme-selector">
+            <button class="theme-btn theme-blue active" data-theme="blue" title="Blue Theme"></button>
+            <button class="theme-btn theme-purple" data-theme="purple" title="Purple Theme"></button>
+            <button class="theme-btn theme-green" data-theme="green" title="Green Theme"></button>
+            <button class="theme-btn theme-red" data-theme="red" title="Red Theme"></button>
+        </div>
+    </div>
+
+    <div id="celebration" class="hidden">
+        🎉 Happy New Year! 🎉
+    </div>
+    <canvas id="fx"></canvas>
+
+    <main class="app">
+        <div class="pill">
+            🎯 Counting down to <strong id="target-text">January 1, 2026</strong>
+        </div>
+
+        <h1>New Year Countdown</h1>
+        <p class="subtitle" id="tz"></p>
+
+        <section class="grid">
+            <article class="card">
+                <div class="value" id="days">00</div>
+                <div class="label">Days</div>
+                <div class="bar">
+                    <div class="fill" id="fill-days"></div>
+                </div>
+            </article>
+            <article class="card">
+                <div class="value" id="hours">00</div>
+                <div class="label">Hours</div>
+                <div class="bar">
+                    <div class="fill" id="fill-hours"></div>
+                </div>
+            </article>
+            <article class="card">
+                <div class="value" id="minutes">00</div>
+                <div class="label">Minutes</div>
+                <div class="bar">
+                    <div class="fill" id="fill-minutes"></div>
+                </div>
+            </article>
+            <article class="card">
+                <div class="value" id="seconds">00</div>
+                <div class="label">Seconds</div>
+                <div class="bar">
+                    <div class="fill" id="fill-seconds"></div>
+                </div>
+            </article>
+        </section>
+
+        <div class="footer">
+            <input type="datetime-local" id="customDate" class="btn" />
+            <button class="btn" id="setBtn">Set Custom Date</button>
+        </div>
+        <footer class="footer">
+            <p>Developed by <strong>
+                    <a href="https://cncc.vercel.app/" target="_blank" style="color: #38bdf8; text-decoration: none;">
+                        Charles Nixon C. Cayading
+                    </a>
+                </strong></p>
+            <p>&copy; <span id="year"></span> All Rights Reserved.</p>
+        </footer>
+    </main>
+
+    <script>
+        // Auto-update footer year
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+    <script src="js/function.js"></script>
+</body>
+
+</html>
