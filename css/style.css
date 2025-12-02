@@ -44,14 +44,15 @@
             padding: 0;
         }
 
-       html, body {
-    min-height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-    background: var(--background-gradient); /* ← IMPORTANT */
-}
-
-
+        html,
+        body {
+           
+            overflow-x: hidden;
+            overflow-y: auto;
+            background: var(--background-gradient) !important;
+            /* ← IMPORTANT */
+            height: 100vh;
+        }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             color: var(--text-primary);
@@ -491,7 +492,7 @@
             }
 
             .app {
-                margin-top: 50px;
+                margin-top: 250px;
                 text-align: center;
             }
 

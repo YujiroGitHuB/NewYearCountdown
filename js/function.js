@@ -33,9 +33,25 @@ function playCelebration() {
     });
 }
 
+window.addEventListener("load", () => {
+    updateStarColor();
+});
+function updateStarColor() {
+    const stars = document.querySelectorAll('.star');
+    const isLight = body.style.filter.includes('invert');
+
+    stars.forEach(star => {
+        star.style.background = isLight ? "black" : "white";
+        star.style.opacity = isLight ? 0.6 : 1;
+    });
+}
+
+
 // Create stars
 function createStars() {
     const container = document.getElementById('stars');
+    container.innerHTML = ""; // clear existing on reload
+
     for (let i = 0; i < 100; i++) {
         const star = document.createElement('div');
         star.className = 'star';
@@ -45,6 +61,26 @@ function createStars() {
         container.appendChild(star);
     }
 }
+
+// Apply star color depending on mode
+function updateStarColor() {
+    const stars = document.querySelectorAll('.star');
+
+    // Light mode = inverted
+    const isLight = body.style.filter.includes('invert');
+
+    stars.forEach(star => {
+        star.style.background = isLight ? "black" : "white";
+        star.style.opacity = isLight ? 0.6 : 1;
+    });
+}
+
+// Run stars on first load
+window.addEventListener("load", () => {
+    createStars();
+    updateStarColor();
+});
+
 createStars();
 
 // Theme controls
@@ -71,6 +107,8 @@ themeToggle.addEventListener('click', () => {
     const isLight = body.style.filter.includes('invert');
     body.style.filter = isLight ? '' : 'invert(1) hue-rotate(180deg)';
     localStorage.setItem('mode', isLight ? 'dark' : 'light');
+
+    updateStarColor(); // IMPORTANT FIX
 });
 
 soundToggle.addEventListener('click', () => {
