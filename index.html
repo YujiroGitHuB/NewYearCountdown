@@ -11,6 +11,17 @@
 
 <body data-theme="blue">
     <div id="stars"></div>
+
+    <!-- VIDEO OVERLAY -->
+    <div id="videoOverlay">
+        <button id="closeVideo">×</button>
+        <button id="unmuteVideo">🔇</button>
+        <video id="fireworksVideo" playsinline>
+            <source src="video/vid1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
     <div class="controls">
         <button class="control-btn" id="themeToggle" title="Toggle Light/Dark">🌓</button>
         <button class="control-btn" id="soundToggle" title="Toggle Sound">🔊</button>
@@ -22,9 +33,6 @@
         </div>
     </div>
 
-    <div id="celebration" class="hidden">
-        🎉 Happy New Year! 🎉
-    </div>
     <canvas id="fx"></canvas>
 
     <main class="app">
@@ -80,10 +88,6 @@
         </footer>
     </main>
 
-    <script>
-        // Auto-update footer year
-        document.getElementById("year").textContent = new Date().getFullYear();
-    </script>
     <script src="js/function.js"></script>
 </body>
 

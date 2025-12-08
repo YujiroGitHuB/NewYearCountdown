@@ -1,3 +1,6 @@
+// Auto-update footer year
+document.getElementById("year").textContent = new Date().getFullYear();
+
 // Sound settings
 let soundEnabled = true;
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -33,25 +36,10 @@ function playCelebration() {
     });
 }
 
-window.addEventListener("load", () => {
-    updateStarColor();
-});
-function updateStarColor() {
-    const stars = document.querySelectorAll('.star');
-    const isLight = body.style.filter.includes('invert');
-
-    stars.forEach(star => {
-        star.style.background = isLight ? "black" : "white";
-        star.style.opacity = isLight ? 0.6 : 1;
-    });
-}
-
-
 // Create stars
 function createStars() {
     const container = document.getElementById('stars');
-    container.innerHTML = ""; // clear existing on reload
-
+    container.innerHTML = "";
     for (let i = 0; i < 100; i++) {
         const star = document.createElement('div');
         star.className = 'star';
@@ -62,20 +50,15 @@ function createStars() {
     }
 }
 
-// Apply star color depending on mode
 function updateStarColor() {
     const stars = document.querySelectorAll('.star');
-
-    // Light mode = inverted
     const isLight = body.style.filter.includes('invert');
-
     stars.forEach(star => {
         star.style.background = isLight ? "black" : "white";
         star.style.opacity = isLight ? 0.6 : 1;
     });
 }
 
-// Run stars on first load
 window.addEventListener("load", () => {
     createStars();
     updateStarColor();
@@ -89,10 +72,9 @@ const themeToggle = document.getElementById('themeToggle');
 const soundToggle = document.getElementById('soundToggle');
 const themeBtns = document.querySelectorAll('.theme-btn');
 
-// Load saved settings
-const savedTheme = localStorage.getItem('theme') || 'blue';
-const savedMode = localStorage.getItem('mode') || 'dark';
-const savedSound = localStorage.getItem('sound') !== 'false';
+const savedTheme = 'blue';
+const savedMode = 'dark';
+const savedSound = true;
 
 body.dataset.theme = savedTheme;
 if (savedMode === 'light') body.style.filter = 'invert(1) hue-rotate(180deg)';
@@ -106,15 +88,12 @@ themeBtns.forEach(btn => {
 themeToggle.addEventListener('click', () => {
     const isLight = body.style.filter.includes('invert');
     body.style.filter = isLight ? '' : 'invert(1) hue-rotate(180deg)';
-    localStorage.setItem('mode', isLight ? 'dark' : 'light');
-
-    updateStarColor(); // IMPORTANT FIX
+    updateStarColor();
 });
 
 soundToggle.addEventListener('click', () => {
     soundEnabled = !soundEnabled;
     soundToggle.textContent = soundEnabled ? '🔊' : '🔇';
-    localStorage.setItem('sound', soundEnabled);
 });
 
 themeBtns.forEach(btn => {
@@ -122,7 +101,6 @@ themeBtns.forEach(btn => {
         themeBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         body.dataset.theme = btn.dataset.theme;
-        localStorage.setItem('theme', btn.dataset.theme);
     });
 });
 
@@ -148,20 +126,10 @@ function breakdown(ms) {
     const hours = Math.floor((sec % 86400) / 3600);
     const minutes = Math.floor((sec % 3600) / 60);
     const seconds = sec % 60;
-    return {
-        days,
-        hours,
-        minutes,
-        seconds
-    };
+    return { days, hours, minutes, seconds };
 }
 
-function setProgress({
-    days,
-    hours,
-    minutes,
-    seconds
-}, target) {
+function setProgress({ days, hours, minutes, seconds }, target) {
     const now = new Date();
     const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const endOfDay = new Date(startOfDay.getTime() + 86400000);
@@ -193,9 +161,7 @@ const fx = (() => {
         w = canvas.width = innerWidth;
         h = canvas.height = innerHeight;
     }
-    addEventListener('resize', resize, {
-        passive: true
-    });
+    addEventListener('resize', resize, { passive: true });
     resize();
 
     function spawn(x, y, color) {
@@ -203,8 +169,7 @@ const fx = (() => {
             const a = Math.random() * Math.PI * 2;
             const s = Math.random() * 7 + 2;
             particles.push({
-                x,
-                y,
+                x, y,
                 vx: Math.cos(a) * s,
                 vy: Math.sin(a) * s,
                 life: 140 + Math.random() * 60,
@@ -246,15 +211,48 @@ const fx = (() => {
     }
 
     loop();
-    return {
-        boom
-    };
+    return { boom };
 })();
 
+// VIDEO OVERLAY CONTROLS
+const videoOverlay = document.getElementById('videoOverlay');
+const fireworksVideo = document.getElementById('fireworksVideo');
+const closeVideoBtn = document.getElementById('closeVideo');
+const unmuteVideoBtn = document.getElementById('unmuteVideo');
+
+// Auto close video when ended
+fireworksVideo.addEventListener('ended', () => {
+    hideVideoOverlay();
+});
+
+function showVideoOverlay() {
+    videoOverlay.classList.add('active');
+    fireworksVideo.currentTime = 0;
+    fireworksVideo.muted = false;
+    fireworksVideo.play().catch(err => {
+        console.log('Autoplay prevented:', err);
+        fireworksVideo.muted = true;
+        fireworksVideo.play();
+    });
+    unmuteVideoBtn.textContent = '🔊';
+}
+
+function hideVideoOverlay() {
+    videoOverlay.classList.remove('active');
+    fireworksVideo.pause();
+    fireworksVideo.currentTime = 0;
+}
+
+closeVideoBtn.addEventListener('click', hideVideoOverlay);
+
+unmuteVideoBtn.addEventListener('click', () => {
+    fireworksVideo.muted = !fireworksVideo.muted;
+    unmuteVideoBtn.textContent = fireworksVideo.muted ? '🔇' : '🔊';
+});
+
+// MAIN COUNTDOWN
 (function () {
-    // Load saved custom date
-    const savedDate = localStorage.getItem('customDate');
-    const custom = savedDate ? new Date(savedDate) : parseCustomTarget();
+    const custom = parseCustomTarget();
     let target = custom || new Date("2026-01-01T00:00:00");
 
     const fmt = new Intl.DateTimeFormat(undefined, {
@@ -275,12 +273,9 @@ const fx = (() => {
         const now = new Date();
         if (now >= target) {
             fx.boom();
-            playCelebration();
-            document.getElementById('celebration').classList.remove('hidden');
+            showVideoOverlay();
 
             setTimeout(() => {
-                document.getElementById('celebration').classList.add('hidden');
-
                 if (custom) {
                     target = new Date(
                         target.getFullYear() + 1,
@@ -295,14 +290,12 @@ const fx = (() => {
                 }
 
                 document.getElementById('target-text').textContent = fmt.format(target);
-                localStorage.setItem('customDate', target.toISOString());
-            }, 10000);
+            }, 1000);
         }
 
         const diff = target - now;
         const t = breakdown(diff);
 
-        // Play tick sound on second change
         if (t.seconds !== lastSecond) {
             playTick();
             lastSecond = t.seconds;
@@ -324,7 +317,6 @@ const fx = (() => {
             const d = new Date(input);
             if (!isNaN(d.getTime())) {
                 target = d;
-                localStorage.setItem('customDate', d.toISOString());
                 document.getElementById('target-text').textContent = fmt.format(target);
                 render();
             } else {
